@@ -1,7 +1,7 @@
 {
     "name": "didrive_mod/bibi",
     "description": "bibi модуль",
-    "version": "0.0.2",
+    "version": "0.0.3",
     
     "keywords": [
         "didrive", "module", "nyos", "uralweb.info"
@@ -20,7 +20,8 @@
     "require": {
 
         "php": ">=7.3.0" ,
-        "twig/twig": ">=2.10.0"
+        "twig/twig": ">=2.10.0",
+        "didrive_api/bibi": ">=0.0.3"
 
     }
     ,
