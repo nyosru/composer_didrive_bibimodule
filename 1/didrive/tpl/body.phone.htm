@@ -1,0 +1,113 @@
+{% spaceless %}
+
+    <div class="container-fluid" >
+
+        <div class="row" >
+            <div class="col-xs-12 col-sm-6" >
+                <h3 class="alert alert-success" >Отправить в блокировку</h3>
+            </div>
+        </div>
+        
+        <div class="row" >
+            <div class="col-xs-12 col-sm-6" >
+                <div class="bg-warning" >данные</div>
+                <form action="/vendor/didrive_api/bibi/1/micro-service/api-suspendCTN.php" method="POST" 
+                      {#xclass="send_form_to_ajax" #}
+                      class="base__send_form_ajax" 
+                      {# показываем блок после отправки запроса #}
+                      xafter_send_show_id="res{{sp_now}}{{ now_date }}"
+                      {# результат сюда #}
+                      resto_id="res{{ nn }}"
+                      {# что скрыть после успешного выполнения #}
+                      xhide_before_job_ok="#form{{sp_now}}{{ now_date }}"
+                      {# если есть то обновим страницу после успеха #}
+                      xbefore_job_ok_reload="da"
+                      >
+                    договор <input type="text" class="form-control" style="width:200px; display: inline-block;" readonly="" name="ban" value="{{ now_dog }}" />
+                    <br/>
+                    номер <input type="text" class="form-control" style="width:200px; display: inline-block;" readonly="" name="phone" value="{{ phone_now.ctn }}" />
+                    <br/>
+                    новое состояние номера (причины блокировки)
+                    <select class="form-control" name="reasonCode" >
+                        <option value="" >нужно выбрать</option>
+                        <option value="WIB" >блокировка по желанию (полная)</option>
+                        <option value="WIO" >по желанию на исх. связь</option>
+                        <option value="STO" >блокировка по краже</option>
+                        <option value="STB" >блокировка по краже (полная)</option>
+                        <option value="S1B" >по сохранению (полная)</option>
+                    </select>
+                    <br/>
+                    метод <input type="text" readonly="" name="method" value="suspendCTN" class="form-control" style="width:200px; display: inline-block;" />
+                    <br/>
+                    <input type="submit" value="Отправить" />
+                </form>
+            </div>
+            <div class="col-xs-12 col-sm-6" >
+                <div class="bg-info" >Результат обработки</div>
+                <div id="res{{ nn }}"></div>
+            </div>
+        </div>
+
+
+        {% set nn = nn+1 %}
+        <div class="row" >
+            <div class="col-xs-12" >
+                <h3 class="alert alert-success" >Разблокировать</h3>
+            </div>
+        </div>
+        <div class="row" >
+            <div class="col-xs-12 col-sm-6" >
+                <div class="bg-warning" >данные</div>
+                <form action="/vendor/didrive_api/bibi/1/micro-service/api-restoreCTN.php" method="POST" 
+                      {#xclass="send_form_to_ajax" #}
+                      class="base__send_form_ajax" 
+                      {# показываем блок после отправки запроса #}
+                      xafter_send_show_id="res{{sp_now}}{{ now_date }}"
+                      {# результат сюда #}
+                      resto_id="res{{ nn }}"
+                      {# что скрыть после успешного выполнения #}
+                      xhide_before_job_ok="#form{{sp_now}}{{ now_date }}"
+                      {# если есть то обновим страницу после успеха #}
+                      xbefore_job_ok_reload="da"
+                      >
+                    договор <input type="text" class="form-control" style="width:200px; display: inline-block;" readonly="" name="ban" value="{{ now_dog }}" />
+                    <br/>
+                    номер <input type="text" class="form-control" style="width:200px; display: inline-block;" readonly="" name="phone" value="{{ phone_now.ctn }}" />
+                    {#                    <br/>
+                                        метод <input type="text" readonly="" name="method" value="suspendCTN" class="form-control" style="width:200px; display: inline-block;" />
+                    #}                    <br/>
+                    <input type="submit" value="Отправить" />
+                </form>
+            </div>
+            <div class="col-xs-12 col-sm-6" >
+                <div class="bg-info" >Результат обработки</div>
+                <div id="res{{ nn }}"></div>
+            </div>
+        </div>
+
+
+
+        {# {{ pa(phone_now) }} #}
+        {{ pa(actions_phone,2) }}
+
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th>Параметр</th>
+                    <th>Значение</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for k,v in phone_now %}
+                    <tr>
+                        <td>{{ k }}</td>
+                        <td>{{ v }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+
+{% endspaceless %}

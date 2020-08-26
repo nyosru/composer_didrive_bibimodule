@@ -1,0 +1,70 @@
+{% spaceless %}
+
+    <fieldset><legend>список заявок и их статус</legend>
+
+        {% set servs = items__get(db,'701.beeline_dogovors') %}
+        {#{{ pa(servs) }}#}
+
+        {% set now_dog = 0 %}
+        <div>
+
+            выберите договор: 
+
+            {% for k,v in servs if v.who_added == session.now_user_di.id %}
+                <a href="?level={{ get.level }}&dogovor={{ v.id }}" class="btn 
+                   {% if get.dogovor is defined and get.dogovor == v.id %} 
+                       {% set now_dog = v.id %} 
+                       btn-success 
+                   {% else %} 
+                       btn-light 
+                   {% endif %} 
+                   btn-xs" >{{ v.head }}</a> &nbsp;
+            {% endfor %}
+
+        </div>
+
+        {# ----- {{ now_dog }} ---- #}
+
+        {% if now_dog != 0 %}
+
+        <div class="row" >
+            <div class="col-xs-12" >
+                <h3 class="alert alert-success" >Получаем список заявок и сохраняем новые/обновлённые в бд</h3>
+            </div>
+        </div>
+        <div class="row" >
+            <div class="col-xs-12 col-sm-3" >
+                <div class="bg-warning" >данные</div>
+                <form action="/vendor/didrive_api/bibi/1/micro-service/api-getRequestList.php" method="POST" 
+                      {#xclass="send_form_to_ajax" #}
+                      class="base__send_form_ajax" 
+                      {# показываем блок после отправки запроса #}
+                      xafter_send_show_id="res{{sp_now}}{{ now_date }}"
+                      {# результат сюда #}
+                      resto_id="res{{ nn }}"
+                      {# что скрыть после успешного выполнения #}
+                      xhide_before_job_ok="#form{{sp_now}}{{ now_date }}"
+                      {# если есть то обновим страницу после успеха #}
+                      xbefore_job_ok_reload="da"
+                      >
+                    договор <input type="text" class="form-control" style="width:200px; display: inline-block;" readonly="" name="ban" value="{{ now_dog }}" />
+                    <br/>
+                    номер запроса <input type="text" class="form-control" style="width:200px; display: inline-block;" xreadonly="" name="requestId" value="" />
+{#                    <br/>
+                    метод <input type="text" readonly="" name="method" value="suspendCTN" class="form-control" style="width:200px; display: inline-block;" />
+#}                    <br/>
+                    <input type="submit" value="Отправить" />
+                </form>
+            </div>
+            <div class="col-xs-12 col-sm-9" >
+                <div class="bg-info" >Результат обработки</div>
+                <div id="res{{ nn }}"></div>
+            </div>
+        </div>
+            
+
+        {% endif %}
+
+    </fieldset>
+
+{% endspaceless %}
