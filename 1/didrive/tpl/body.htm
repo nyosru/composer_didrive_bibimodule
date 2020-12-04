@@ -1,0 +1,141 @@
+{% spaceless %}
+
+    {#{{ pa(session) }}#}
+
+    {%  set timer_show = 'off' %}
+    {%  if 1 == 2 %}{%  set timer_show = 'on' %}{% endif %}
+
+    {# считаем общее время #}
+    {{ didrive_f__timer_start(99) }}
+
+    <hr>
+    
+    {% include '/vendor/didrive_mod/bibi/1/didrive/tpl/body.req_list.htm' %}
+    
+    <hr>
+
+    <fieldset><legend>список договоров и загрузка номеров <sup onclick="$('#refresh_table').toggle('slow');" >скрыть/показать</sup></legend>
+
+        {% set servs = items__get(db,'701.beeline_dogovors') %}
+        {#{{ pa(servs) }}#}
+
+        <table class="table" id="refresh_table" style="display:none;"  >
+            <tbody>
+                {% for k,v in servs if v.who_added == session.now_user_di.id %}
+                    <tr>
+                        <td>
+                            {#{{ k }}#}
+                            {#{{ pa(v) }}#}
+                            {{ v.head }}
+                        </td>
+                        <td>
+                            <a href="#" 
+
+                               ajax_go="/vendor/didrive_mod/bibi/1/didrive/micro-service/phones-refresh-from-api.php" 
+                               class="base__send_data_ajax" 
+
+                               resto_id="serv_{{ v.id }}" 
+
+                               id="{{ v.id }}" 
+                               s="{{ creatSecret( v.id ) }}" 
+
+                               >обновить список номеров</a>
+                        </td>
+                        <td>
+                            <div id="serv_{{ v.id }}" ></div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </fieldset>
+
+    <hr>
+
+    <fieldset><legend>список номеров и работа с номером</legend>
+
+        {% set servs = items__get(db,'701.beeline_dogovors') %}
+        {#{{ pa(servs) }}#}
+
+
+        {% set now_dog = 0 %}
+
+        <div>
+
+            выберите договор: 
+
+            {% for k,v in servs if v.who_added == session.now_user_di.id %}
+                <a href="?level={{ get.level }}&dogovor={{ v.id }}" class="btn 
+                   {% if get.dogovor is defined and get.dogovor == v.id %} 
+                       {% set now_dog = v.id %} 
+                       btn-success 
+                   {% else %} 
+                       btn-light 
+                   {% endif %} 
+                   btn-xs" >{{ v.head }}</a> &nbsp;
+            {% endfor %}
+
+        </div>
+
+        {# ----- {{ now_dog }} ---- #}
+
+        {% if now_dog != 0 %}
+
+            <div class="container-fluid" >
+                <div class="row" >
+
+                    <div class="col-xs-12 col-md-4" >
+                        <h3>Телефоны</h3>
+
+                        {% set phones = bibi__get_phones_from_dogovor( db, now_dog ) %}
+                        {#{{ pa(phones.data) }}#}
+
+                        {% set phone_now = 0 %}
+
+                        <div>
+                            {% for k,v in phones.data %}
+                                <a href="?level={{ get.level }}&dogovor={{ get.dogovor }}&phone={{ v.ctn }}" class="btn 
+                                   {% if get.phone is defined and get.phone == v.ctn %} 
+                                       {% set phone_now = v %}
+                                       btn-success 
+                                   {% else %} 
+                                       btn-light 
+                                   {% endif %} 
+                                   btn-xs" >{{ v.ctn }}</a> &nbsp;
+                            {% endfor %}
+                        </div>
+
+                    </div>            
+
+                    <div class="col-xs-12 col-md-8" >
+                        <h3>Действия</h3>
+                        
+                        {% if phone_now != 0 %}
+
+    {% set nn = 1 %}
+                            
+                        {% include '/vendor/didrive_mod/bibi/1/didrive/tpl/body.phone.htm' %}
+
+                        {% endif %}
+
+                    </div>            
+
+                </div>            
+            </div>            
+
+        {% endif %}
+
+
+    </fieldset>
+
+    {# общее время #}
+    {% set t = didrive_f__timer_stop(99) %}
+
+    <div style="position: fixed; bottom: 0px; right: 0px; padding: 3px 10px; z-index: 9000; background-color: rgba(255,255,120,0.5);"
+         onclick="$(this).hide();
+                 return false;" >
+        i {{ t }}
+    </div>
+
+{% endspaceless %}
