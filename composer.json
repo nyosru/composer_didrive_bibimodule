@@ -1,10 +1,13 @@
 {
-    "name": "didrive_mod/bibi",
-    "description": "bibi модуль",
-    "version": "0.0.5",
-    
+    "name": "didrive_api/bibi",
+    "description": "api Didrive test - bibi",
+    "version": "0.1.0",
+
     "keywords": [
-        "didrive", "module", "nyos", "uralweb.info"
+        "didrive",
+        "module",
+        "nyos",
+        "uralweb.info"
     ],
     "authors": [
         {
@@ -14,17 +17,20 @@
             "role": "Developer"
         }
     ],
-    
+
     "homepage": "https://uralweb.info/php/#classes",
     "license": "MIT",
     "require": {
 
-        "php": ">=7.3.0" ,
-        "twig/twig": ">=2.10.0"
-
+        "php": ">=7.3.0"
+        ,
+        "didrive/f": ">=1.1.4"
     }
     ,
     "autoload": {
-        "files": ["class.php"]
+        "files": [ 
+            "class.php"
+        ]
     }
+
 }
